@@ -1,0 +1,89 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+#define MAX 100
+
+// Function to collect user input
+void collectData() {
+    char name[MAX], email[MAX], phone[MAX], address[MAX];
+    FILE *file;
+
+    // Open file in append mode
+    file = fopen("contacts.txt", "a");
+    if (file == NULL) {
+        printf("Error opening file.\n");
+        return;
+    }
+
+    // Collect user details
+    printf("Enter Name: ");
+    fgets(name, MAX, stdin);
+    name[strcspn(name, "\n")] = '\0';  // Remove trailing newline
+
+    printf("Enter Email: ");
+    fgets(email, MAX, stdin);
+    email[strcspn(email, "\n")] = '\0';
+
+    printf("Enter Phone Number: ");
+    fgets(phone, MAX, stdin);
+    phone[strcspn(phone, "\n")] = '\0';
+
+    printf("Enter Address (optional): ");
+    fgets(address, MAX, stdin);
+    address[strcspn(address, "\n")] = '\0';
+
+    // Write to file
+    fprintf(file, "Name: %s\nEmail: %s\nPhone: %s\nAddress: %s\n\n", name, email, phone, address);
+    printf("Contact saved successfully!\n");
+
+    fclose(file);
+}
+
+// Function to view all saved contacts
+void viewContacts() {
+    char ch;
+    FILE *file;
+
+    file = fopen("contacts.txt", "r");
+    if (file == NULL) {
+        printf("No contacts found.\n");
+        return;
+    }
+
+    printf("\n--- Saved Contacts ---\n");
+    while ((ch = fgetc(file)) != EOF) {
+        putchar(ch);
+    }
+    fclose(file);
+}
+
+int main() {
+    int choice;
+
+    do {
+        printf("\nSimple Contact Form\n");
+        printf("1. Add Contact\n");
+        printf("2. View Contacts\n");
+        printf("3. Exit\n");
+        printf("Enter your choice: ");
+        scanf("%d", &choice);
+        getchar();  // Clear newline left by scanf
+
+        switch (choice) {
+            case 1:
+                collectData();
+                break;
+            case 2:
+                viewContacts();
+                break;
+            case 3:
+                printf("Exiting program.\n");
+                break;
+            default:
+                printf("Invalid choice! Please try again.\n");
+        }
+    } while (choice != 3);
+
+    return 0;
+}
